@@ -1,10 +1,11 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router,Event } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Hero } from '@tour-of-heroes/data';
 import { Observable } from 'rxjs';
@@ -32,10 +33,35 @@ export class HeroDetailComponent implements OnInit {
     private router:ActivatedRoute,
     private location: Location,
     private store: Store,
-
     private router1:Router,
     private fb: FormBuilder
-  ) { }
+  ) {
+    this.router1.events.subscribe((event:Event) => {
+      switch(true){
+        case event instanceof NavigationStart:{
+          this.loading = true;
+          break;
+        }
+        case event instanceof NavigationEnd:{
+          this.timeout = setTimeout(() => {
+            clearTimeout(this.timeout);
+            this.loading = false;
+            this.check_router = true;
+         }, 1000);
+          break;
+        }
+        case event instanceof NavigationCancel:
+        case event instanceof NavigationError:{
+          this.loading = false;
+          break;
+        }
+        default:{
+          break;
+        }
+
+      }
+    })
+   }
 
   ngOnInit(): void {
     this.getHero();
@@ -45,9 +71,6 @@ export class HeroDetailComponent implements OnInit {
       name : new FormControl(this.data_update.name)
     })
 
-    //  console.log("form data ",this.form.controls);
-    //  console.log("form data id",this.form.controls.id.value);
-    //  console.log("form data name",this.form.controls.name.value);
   }
   getHero(){
     // const id = Number(this.router.snapshot.paramMap.get('id'));
@@ -58,7 +81,7 @@ export class HeroDetailComponent implements OnInit {
     this.router.snapshot.data['data'];
     this.check = false;
     console.log("Nhận được dữ liệu")
-    //this.spinner.hide()
+
   }
   goBack(){
     this.location.back();
@@ -78,5 +101,6 @@ export class HeroDetailComponent implements OnInit {
     this.data_test = {id,name}
     this.store.dispatch(new HeroAction.UpdateHero(this.data_test)).subscribe(() => this.goBack())
   }
+
 
 }

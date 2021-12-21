@@ -1,1 +1,11 @@
-<p>dashboard works!</p>
+<div *ngIf = "check_router === true">
+
+  <h2>Top Heroes </h2>
+  <div class="heroes-menu" *ngIf = 'heroes$ | async as heroes'>
+    <a *ngFor="let hero of heroes.slice(0,4)"
+      routerLink="/detail/{{hero.id}}">
+      {{hero.name}}
+    </a>
+  </div>
+  <tour-of-heroes-hero-search ></tour-of-heroes-hero-search>
+</div>

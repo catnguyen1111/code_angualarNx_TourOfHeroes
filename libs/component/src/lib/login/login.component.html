@@ -1,12 +1,11 @@
-<!--
-<div  class="container">
+<div *ngIf="check === true"  class="container">
   <h1 class="text-center">Login</h1>
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
    <div class="form-group">
      <label for="username">Username:</label>
      <input id = "username" type="text" placeholder="Username" class="form-control" formControlName="username">
      <span
-          *ngIf="loginForm.controls.username.touched && loginForm.controls.username.errors?.required">
+          *ngIf="loginForm.controls['username'].touched && loginForm.controls['username'].errors?.['required']">
             Please enter Username.
       </span>
    </div>
@@ -14,11 +13,11 @@
     <label for="">Email:</label>
     <input type="email" placeholder="Email" class="form-control"formControlName="email">
     <span
-         *ngIf="loginForm.controls.email.touched && loginForm.controls.email.errors?.required">
+         *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].errors?.['required']">
            Please enter email address.
      </span>
      <span
-       *ngIf="loginForm.controls.email.touched && loginForm.controls.email.errors?.pattern">
+       *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].errors?.['pattern']">
          Email address not well formed.
      </span>
    </div>
@@ -26,7 +25,7 @@
     <label for="">Password:</label>
     <input type="text" placeholder="Password" class="form-control" formControlName="password">
     <span
-         *ngIf="loginForm.controls.password.touched && loginForm.controls.password.errors?.required">
+         *ngIf="loginForm.controls['password'].touched && loginForm.controls['password'].errors?.['required']">
            Please enter password.
      </span>
    </div>
@@ -35,4 +34,4 @@
    </div>
   </form>
 </div>
-<h1>Login</h1> -->
+

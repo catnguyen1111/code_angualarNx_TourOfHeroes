@@ -1,9 +1,10 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router,Event } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import {HeroState} from '../../../../store/src/lib/hero.state';
@@ -41,37 +42,36 @@ export class HeroesComponent implements OnInit,AfterViewInit,OnDestroy {
   constructor(private heroService: HeroService,
     private messageService: MessageService,
     private store:Store,
-    // private auth: AuthService,
     private cfr: ComponentFactoryResolver,
     private alertService: AlertService,
     private router: Router,
 
     ) {
-      // this.router.events.subscribe((event:Event) => {
-      //   switch(true){
-      //     case event instanceof NavigationStart:{
-      //       this.loading = true;
-      //       break;
-      //     }
-      //     case event instanceof NavigationEnd:{
-      //       this.timeout = setTimeout(() => {
-      //         clearTimeout(this.timeout);
-      //         this.loading = false;
-      //         this.check_router = true;
-      //      }, 1000);
-      //       break;
-      //     }
-      //     case event instanceof NavigationCancel:
-      //     case event instanceof NavigationError:{
-      //       this.loading = false;
-      //       break;
-      //     }
-      //     default:{
-      //       break;
-      //     }
+      this.router.events.subscribe((event:Event) => {
+        switch(true){
+          case event instanceof NavigationStart:{
+            this.loading = true;
+            break;
+          }
+          case event instanceof NavigationEnd:{
+            this.timeout = setTimeout(() => {
+              clearTimeout(this.timeout);
+              this.loading = false;
+              this.check_router = true;
+           }, 500);
+            break;
+          }
+          case event instanceof NavigationCancel:
+          case event instanceof NavigationError:{
+            this.loading = false;
+            break;
+          }
+          default:{
+            break;
+          }
 
-      //   }
-      // })
+        }
+      })
     }
 
 

@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 
@@ -5,7 +6,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router,Event } from '@angular/router';
+import {AuthService} from '../../../../services/src/lib/auth.service'
 @Component({
   selector: 'tour-of-heroes-login',
   templateUrl: './login.component.html',
@@ -29,7 +31,33 @@ export class LoginComponent implements OnInit {
     password : "user"
 
   }
-  constructor() { }
+  constructor(private authService: AuthService,private router: Router) {
+    this.router.events.subscribe((event:Event) => {
+      switch(true){
+        case event instanceof NavigationStart:{
+          this.loading = true;
+          break;
+        }
+        case event instanceof NavigationEnd:{
+          this.timeout = setTimeout(() => {
+            clearTimeout(this.timeout);
+            this.loading = false;
+            this.check = true;
+         }, 500);
+          break;
+        }
+        case event instanceof NavigationCancel:
+        case event instanceof NavigationError:{
+          this.loading = false;
+          break;
+        }
+        default:{
+          break;
+        }
+
+      }
+    })
+   }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -48,8 +76,8 @@ export class LoginComponent implements OnInit {
       localStorage.setItem("username",this.loginForm.value.username);
       localStorage.setItem("email",this.loginForm.value.email);
       localStorage.setItem("password",this.loginForm.value.password);
-      // this.authService.loginUser();
-      // this.authService.login();
+      this.authService.loginUser();
+      this.authService.login();
 
     }
     else if(JSON.stringify(this.loginForm.value) === JSON.stringify(this.loginUser)){
@@ -57,12 +85,11 @@ export class LoginComponent implements OnInit {
       localStorage.setItem("username",this.loginForm.value.username);
       localStorage.setItem("email",this.loginForm.value.email);
       localStorage.setItem("password",this.loginForm.value.password);
-      // this.authService.loginUser();
-      // this.authService.login();
+      this.authService.loginUser();
+      this.authService.login();
     }
     else{
       console.log("Login failed");
     }
   }
-
 }

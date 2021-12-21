@@ -1,1 +1,14 @@
-<p>value-accessor works!</p>
+
+  <form >
+    <mat-form-field class="form-field">
+      <input
+      matInput
+      type="text"
+      name="val"
+      (input) = "onChange(getValue($event))"
+      [value] = "val"
+     />
+    </mat-form-field>
+  </form>
+
+

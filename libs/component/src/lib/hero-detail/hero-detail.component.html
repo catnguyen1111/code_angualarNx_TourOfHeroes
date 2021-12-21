@@ -1,1 +1,15 @@
-<p>hero-detail works!</p>
+<div *ngIf="check_router === true">
+  <form [formGroup]="form" >
+   <h2>{{form.controls['name'].value}} Details</h2>
+   <div><span>id:</span>{{form.controls['id'].value}}</div>
+   <div><span>name:</span>{{form.controls['name'].value}}</div>
+   <div class="">
+     <label for="name">Hero name:</label>
+     <input type="text" id= "name" formControlName = "name">
+     <!-- <tour-of-heroes-value-accessor formControlName = "name"></tour-of-heroes-value-accessor> -->
+   </div>
+   <button (click)="goBack()">Go back</button>
+   <button (click)="save(form.controls['id'].value,form.controls['name'].value)">Save</button>
+  </form>
+
+ </div>
