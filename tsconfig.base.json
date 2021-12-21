@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@tour-of-heroes/component": ["libs/component/src/index.ts"],
+      "@tour-of-heroes/data": ["libs/data/src/index.ts"],
+      "@tour-of-heroes/guard": ["libs/guard/src/index.ts"],
+      "@tour-of-heroes/message-service": ["libs/message-service/src/index.ts"],
+      "@tour-of-heroes/services": ["libs/services/src/index.ts"],
+      "@tour-of-heroes/store": ["libs/store/src/index.ts"],
+      "@tour-of-heroes/ui": ["libs/ui/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
