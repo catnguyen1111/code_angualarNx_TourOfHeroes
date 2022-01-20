@@ -4,7 +4,7 @@
 
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router,Event } from '@angular/router';
 import {AuthService} from '../../../../services/src/lib/auth.service'
@@ -13,12 +13,14 @@ import {AuthService} from '../../../../services/src/lib/auth.service'
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loading: boolean = false;
   check:boolean = false;
   timeout:any;
-
+  checkInput:boolean = false;
+  check_disabled:boolean = true;
   loginAdmin = {
     username : "admin",
     email: "admin@gmail.com",
@@ -31,7 +33,9 @@ export class LoginComponent implements OnInit {
     password : "user"
 
   }
+
   constructor(private authService: AuthService,private router: Router) {
+
     this.router.events.subscribe((event:Event) => {
       switch(true){
         case event instanceof NavigationStart:{
@@ -57,19 +61,33 @@ export class LoginComponent implements OnInit {
 
       }
     })
+
    }
 
   ngOnInit(): void {
+
+    console.log("form 3",this.loginForm);
     this.loginForm = new FormGroup({
-      username: new FormControl('',Validators.required),
-      email: new FormControl('',[Validators.required,
+      username: new FormControl({value:'',disabled:false},Validators.required),
+      email: new FormControl({value:'',disabled:true},[Validators.required,
           Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]),
-      password: new FormControl('',Validators.required)
+      password: new FormControl({value:'',disabled:true},Validators.required)
 
     })
+
+
+  }
+  show(event:any){
+    console.log('a',event)
+    if(event!== ''){
+      this.loginForm.controls['email'].enable()
+      this.loginForm.controls['password'].enable()
+    }
   }
   onSubmit(){
-    console.log(this.loginForm.value);
+    console.log("form 1",this.loginForm.value);
+    console.log("form 2",this.loginForm);
+    console.log("form ",this.loginForm.controls['username'].value)
 
     if(JSON.stringify(this.loginForm.value) === JSON.stringify(this.loginAdmin)){
       console.log(" Admin Login successfully");
